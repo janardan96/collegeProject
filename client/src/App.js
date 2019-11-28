@@ -17,8 +17,12 @@ import CreateProfile from "./component/Layout/create-profile/CreateProfile";
 import Editprofile from "./component/Layout/Edit-Profile/EditProfile";
 import AddEducation from "./component/Layout/Education/addEducation";
 import AddInternship from "./component/Layout/Experience/AddInternship";
-// import Profiles from "./component/Layout/profiles/Profile";
-// import Profile from "./component/Layout/profile/profile";
+import Profiles from "./component/Layout/Profiles/Profiles";
+import Profile from "./component/Layout/Mentor/Profile"
+import NotFound from "./component/Layout/NotFound/NotFound";
+import MentorDashboard from "./component/Layout/MentorDashboard/Mdashboard"
+import CreateMentorProfile from "./component/Layout/create-profile/MentorProfile";
+import MentorExperience from "./component/Layout/Experience/Addexperience";
 class App extends Component {
 
   state = {};
@@ -36,8 +40,8 @@ class App extends Component {
                 <Route path="/register" component={Register} />
                 <Route path="/login" component={Login} />
                 <Route path="/forgot" component={ForgotPassword} />
-                {/* <Route path="/profiles" component={Profiles} />
-                <Route path="/profile/:handle" component={Profile} /> */}
+                <Route path="/profiles" component={Profiles} />
+                <Route path="/profile/:userId" component={Profile} />
                 <Route
                   path="/user/password/reset/:token"
                   component={ResetPassword}
@@ -53,7 +57,12 @@ class App extends Component {
                   component={AddInternship}
                 />
                 <PrivateRoute path="/add-education" component={AddEducation} />
+                <PrivateRoute path="/create-mentor" component={CreateMentorProfile} />
+                <PrivateRoute path="/mentor/add-experience" component={AddInternship} />
+                <PrivateRoute path="/mentor/dashboard" component={MentorDashboard} />
               </Switch>
+              <Route path="/not-found" component={NotFound} />
+
               <Fotter />
             </div>
           </Router>

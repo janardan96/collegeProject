@@ -8,9 +8,9 @@ import { Link } from "react-router-dom";
 class CreateProfile extends Component {
     state = {
         displaySocilaInput: false,
-        handle: "",
+        profiency: "",
         company: "",
-        portfolio: "",
+        website: "",
         location: "",
         status: "",
         skills: "",
@@ -30,8 +30,8 @@ class CreateProfile extends Component {
 
     createProfile = async (createUser) => {
         try {
-            await axios.post(Url.createProfile, createUser);
-            this.props.history.push("/dashboard");
+            await axios.post(Url.createMentorProfile, createUser);
+            this.props.history.push("/mentor/add-experience");
 
         } catch (err) {
             const errors = err.response.data;
@@ -41,9 +41,9 @@ class CreateProfile extends Component {
     onSubmit = async (e, history) => {
         e.preventDefault();
         const CreateUserProfile = {
-            handle: this.state.handle,
+            profiency: this.state.profiency,
             company: this.state.company,
-            portfolio: this.state.portfolio,
+            website: this.state.website,
             location: this.state.location,
             status: this.state.status,
             skills: this.state.skills,
@@ -69,7 +69,7 @@ class CreateProfile extends Component {
                             <Link to="/dashboard" className="btn btn-light">
                                 Go Back
               </Link>
-                            <h1 className="display-4 text-center">Create Your Profile</h1>
+                            <h3 className="display-4 text-center">Create Mentor Profile</h3>
                             <p className="lead text-center">
                                 Let's get some information to make your profile stand out
               </p>
@@ -79,17 +79,17 @@ class CreateProfile extends Component {
                                     <input
                                         type="text"
                                         className={classnames("form-control form-control-lg", {
-                                            "is-invalid": errors.handle
+                                            "is-invalid": errors.profiency
                                         })}
-                                        placeholder="* Profile handle"
-                                        name="handle"
+                                        placeholder="*Professional In eg. Web Developement"
+                                        name="profiency"
                                         onChange={this.onChange}
                                     />
-                                    {<div className="invalid-feedback">{errors.handle}</div>}
+                                    {<div className="invalid-feedback">{errors.profiency}</div>}
 
                                     <small className="form-text text-muted">
-                                        A unique handle for your profile URL. Your full name,
-                                        company name, nickname, etc (This CAN'T be changed later)
+                                        In which field you are perfect and want to be mentoring
+
                   </small>
                                 </div>
                                 <div className="form-group">
@@ -102,12 +102,8 @@ class CreateProfile extends Component {
                                     >
                                         <option value="0">* Select Professional Status</option>
                                         <option value="Developer">Developer</option>
-                                        <option value="Junior Developer">Junior Developer</option>
-                                        <option value="Student or Learning">
-                                            Student or Learning
-                    </option>
+                                        <option value="Senior Developer">Senior Developer</option>
                                         <option value="Instructor">Instructor or Teacher</option>
-                                        <option value="Intern">Intern</option>
                                         <option value="Other">Other</option>
                                     </select>
                                     {<div className="invalid-feedback">{errors.status}</div>}
@@ -131,13 +127,13 @@ class CreateProfile extends Component {
                                     <input
                                         type="text"
                                         className={classnames("form-control form-control-lg", {
-                                            "is-invalid": errors.portfolio
+                                            "is-invalid": errors.website
                                         })}
-                                        placeholder="Portfolio"
-                                        name="portfolio"
+                                        placeholder="Website"
+                                        name="website"
                                         onChange={this.onChange}
                                     />
-                                    {<div className="invalid-feedback">{errors.portfolio}</div>}
+                                    {<div className="invalid-feedback">{errors.status}</div>}
                                     <small className="form-text text-muted">
                                         Could be your company website or portfolio
                   </small>

@@ -15,7 +15,7 @@ exports.profile = async (req, res) => {
   try {
     const profile = await studentProfile
       .findOne({ user: req.user.id })
-      .populate("user", ["name", "email", "profilePic"]);
+      .populate("user", ["name", "email", "profilePic", "friendsList"]);
     if (!profile) {
       errrors.noProfile = "There is no profile for this user";
       return res.json(errrors);

@@ -25,7 +25,6 @@ export class AuthStore extends Component {
       this.setState({ user: decode });
       setAuthToken(token);
       window.location.ref = "/dashboard";
-
       const currentTime = Date.now() / 1000;
       if (decode.exp < currentTime) {
         localStorage.removeItem("token");
@@ -34,6 +33,7 @@ export class AuthStore extends Component {
       }
     }
   }
+
 
   AuthState = (userDecode) => {
     this.setState({ isAuth: true, user: userDecode });
@@ -70,6 +70,7 @@ export class AuthStore extends Component {
     const logout = this.logout;
     const deleteAccount = this.deleteAccount;
     const AuthState = this.AuthState;
+
     return (
       <AuthContext.Provider
         value={{

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import AuthContext from "../../../Provider/AuthContext";
-import { Redirect } from "react-router-dom";
+// import { Redirect } from "react-router-dom";
 import axios from "axios";
 import * as Url from "../../../Provider/api";
 import * as Routes from "../../../Provider/route"
@@ -9,21 +9,21 @@ import { Link } from "react-router-dom";
 import ProfileAction from "./ProfileAction";
 import Experience from "./Experience";
 import Education from "./Education";
+import Skills from "./SkillSet";
 
 class Dashboard extends Component {
     static contextType = AuthContext;
     state = {
         profile: null,
         loading: true,
+        mentor: false,
         errors: ""
     };
 
-    componentDidMount() {
+    async  componentDidMount() {
         // Getting user profile data
         axios
-            .get(Url.getProfile, {
-                headers: { Authorization: `${localStorage.getItem("token")}` }
-            })
+            .get(Url.getProfile, { headers: { Authorization: `${localStorage.getItem("token")}` } })
             .then((res) => {
                 this.setState({
                     loading: false,
@@ -31,7 +31,13 @@ class Dashboard extends Component {
                     errors: res.data.noProfile
                 });
             })
-            .catch((err) => this.setState({ errors: err.response.data }));
+            .catch((err) => this.setState({ errors: err.response.data }));;
+
+        const mentor = await axios.get(Url.mentorProfileSelf, { headers: { Authorization: `${localStorage.getItem("token")}` } });
+        if (!mentor.data.noProfile) {
+            this.setState({ mentor: true });
+        }
+        console.log(mentor)
     }
 
     // Delete Experience
@@ -44,7 +50,7 @@ class Dashboard extends Component {
 
     onDeleteEdu = async (id) => {
         const deleteEdu = await axios.delete(`${Url.deleteEducation}/${id}`);
-        this.setState({ 
+        this.setState({
             profile: deleteEdu.data
         });
     };
@@ -54,28 +60,41 @@ class Dashboard extends Component {
         await this.context.deleteAccount(e);
     };
 
+    // Become Mentor
+    mentor = () => {
+        if (window.confirm("Are you sure? It will redirect you to creation of mentor profile ")) {
+            window.location.href = "/mentor-dashboard";
+        }
+    }
+
     render() {
         const { profile, loading } = this.state;
         const { name } = this.context.user;
         // console.log(errors);
         // console.log(loading);
-        console.log(profile);
+        // console.log(profile)
         // console.log(this.context);
 
-        let dashboardContent;
+        let dashboardContent, mentorLink;
         if (profile === null || loading) {
             dashboardContent = <Spinner />;
         } else {
+            mentorLink = profile.category === "Student" ? (this.state.mentor ? (<Link to="/mentor/dashboard" className="btn btn-primary btn-md" >Go to Mentor Profile</Link>
+            ) : (<div>
+                <Link to="/create-mentor" className="btn btn-primary btn-md" >Become a mentor</Link>
+            </div>)) : ""
+
             if (!profile.noProfile) {
                 dashboardContent = (
                     <div>
                         <p className="lead text-muted">
                             Welcome{" "}
-                            <Link to={`/profile/${profile.handle}`}>
-                                {name.charAt(0).toUpperCase() + name.slice(1)}
-                            </Link>
+                            <strong>{name.charAt(0).toUpperCase() + name.slice(1)}
+                            </strong>
                         </p>
                         <ProfileAction />
+                        {/* Skills */}
+                        {profile.skills.length > 0 ? <Skills profile={profile} /> : ""}
                         {/* Internships */}
                         {profile.internships.length > 0 ? <Experience
                             internships={profile.internships}
@@ -87,14 +106,13 @@ class Dashboard extends Component {
                             deleteEdu={this.onDeleteEdu}
                         /> : ""}
 
-
-
                         <div style={{ marginBottom: "60px" }} />
                         <button onClick={this.onDeleteClick} className="btn btn-danger">
                             Delete My Account
             </button>
                     </div>
                 );
+
             } else {
                 dashboardContent = (
                     <div style={{ height: "59vh" }}>
@@ -110,20 +128,27 @@ class Dashboard extends Component {
             }
         }
 
-        return !this.context.isAuth ? (
-            <Redirect to="/login" />
-        ) : (
-                <div className="dashboard" style={{ marginTop: "56px" }}>
-                    <div className="container">
-                        <div className="row">
-                            <div className="col-md-12">
-                                <h1 className="display-4">Dashboard</h1>
-                                {dashboardContent}
+
+
+
+
+        return (
+            <div className="dashboard" style={{ marginTop: "56px" }}>
+                <div className="container">
+                    <div className="row">
+                        <div className="col-md-12">
+                            <div className="d-flex justify-content-between align-items-center">
+                                <h1 className="display-4  ">Dashboard</h1>
+                                {mentorLink}
+
                             </div>
+
+                            {dashboardContent}
                         </div>
                     </div>
                 </div>
-            );
+            </div>
+        );
     }
 }
 

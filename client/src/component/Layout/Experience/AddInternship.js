@@ -14,8 +14,15 @@ class AddInternship extends Component {
         current: false,
         description: "",
         errors: {},
-        disabled: false
+        disabled: false,
+        mentor: false
     };
+
+    componentDidMount() {
+        if (window.location.pathname === "/mentor/add-experience") {
+            this.setState({ mentor: true })
+        }
+    }
 
     onChange = (e) => {
         this.setState({ [e.target.name]: e.target.value });
@@ -32,14 +39,16 @@ class AddInternship extends Component {
         console.log(this.state.disabled);
     };
     addExperience = async (userData, history) => {
-        try {
-            const userExperience = await axios.post(Url.addInternship, userData);
-            this.props.history.push("/add-education");
-            // console.log(userExperience);
-        } catch (error) {
-            this.setState({ errors: error.response.data });
-            // console.log(error);
+        if (window.location.pathname === '/mentor/add-experience') {
+            await axios.post(Url.mentorExperience, userData).catch(err => this.setState({ errors: err.response.data }));
+            this.props.history.push("/mentor/dashboard");
         }
+        else {
+            await axios.post(Url.addInternship, userData).catch(err => this.setState({ errors: err.response.data }));
+            this.props.history.push("/dashboard");
+        }
+
+
     };
 
     onSubmit = async (e, history) => {
@@ -56,16 +65,18 @@ class AddInternship extends Component {
     };
 
     render() {
-        const { disabled, errors } = this.state;
+        const { errors } = this.state;
         return (
             <div className="section add-experience" style={{ marginTop: "90px" }}>
                 <div className="container">
                     <div className="row">
                         <div className="col-md-8 m-auto">
-                            <Link to="/dashboard" className="btn btn-light">
-                                Go Back
-              </Link>
-                            <h1 className="display-4 text-center">Add Your Experience</h1>
+                            {this.state.mentor ? (<Link to="/create-mentor" className="btn btn-light">
+                                Go Back</Link>) : (<Link to="/dashboard" className="btn btn-light">Go Back </Link>)}
+
+                            {this.state.mentor ? (<h1 className="display-4 text-center">Add Mentor Experience</h1>
+                            ) : (<h1 className="display-4 text-center">Add Your Experience</h1>
+                                )}
                             <p className="lead text-center">
                                 Add any developer/programming positions that you have had in the
                                 past

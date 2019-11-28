@@ -57,7 +57,8 @@ exports.register = async (req, res) => {
       //Sign Token
       const payload = {
         id: regUser.id,
-        name: regUser.name
+        name: regUser.name,
+        profilePic: regUser.profilePic
       };
       //Generate Token
       const token = await jwt.sign(payload, keys.secretOrkey, {
@@ -96,7 +97,9 @@ exports.login = async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (isMatch) {
       // User Match
-      const payload = { id: user.id, name: user.name };
+      const payload = {
+        id: user.id, name: user.name, profilePic: user.profilePic
+      };
       //   Sign Token
       const token = await jwt.sign(payload, keys.secretOrkey, {
         expiresIn: 604800

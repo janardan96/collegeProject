@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import * as ROUTES from "../../Provider/route";
+// import * as ROUTES from "../../Provider/route";
 // import AuthContext from "../Provider/AuthContext";
 import AuthContext from "../../Provider/AuthContext";
 
@@ -33,8 +33,8 @@ class LandingPage extends Component {
         </div>
       </div>
     ) : (
-      (window.location.href = "/dashboard")
-    );
+        (window.location.href = "/dashboard")
+      );
   }
 }
 

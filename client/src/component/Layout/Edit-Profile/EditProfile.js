@@ -11,7 +11,7 @@ class EditProfile extends Component {
         displaySocilaInput: false,
         handle: "",
         company: "",
-        website: "",
+        portfolio: "",
         location: "",
         status: "",
         skills: "",
@@ -35,7 +35,7 @@ class EditProfile extends Component {
                 this.setState({
                     handle: res.data.handle,
                     company: !_.isEmpty(res.data.company) ? res.data.company : "",
-                    website: !_.isEmpty(res.data.website) ? res.data.website : "",
+                    portfolio: !_.isEmpty(res.data.portfolio) ? res.data.portfolio : "",
                     location: !_.isEmpty(res.data.location) ? res.data.location : "",
                     status: !_.isEmpty(res.data.status) ? res.data.status : "",
                     skills: res.data.skills.join(","),
@@ -59,7 +59,7 @@ class EditProfile extends Component {
 
     editProfile = async (createUser) => {
         try {
-            const ProfileData = await axios.post(Url.createProfile, createUser);
+            await axios.post(Url.createProfile, createUser);
             this.props.history.push("/dashboard");
         } catch (err) {
             const errors = err.response.data;
@@ -71,7 +71,7 @@ class EditProfile extends Component {
         const CreateUserProfile = {
             handle: this.state.handle,
             company: this.state.company,
-            website: this.state.website,
+            portfolio: this.state.portfolio,
             location: this.state.location,
             status: this.state.status,
             skills: this.state.skills,
@@ -161,14 +161,14 @@ class EditProfile extends Component {
                                     <input
                                         type="text"
                                         className={classnames("form-control form-control-lg", {
-                                            "is-invalid": errors.website
+                                            "is-invalid": errors.portfolio
                                         })}
-                                        placeholder="Website"
-                                        name="website"
-                                        value={this.state.website}
+                                        placeholder="Portfolio"
+                                        name="portfolio"
+                                        value={this.state.portfolio}
                                         onChange={this.onChange}
                                     />
-                                    {<div className="invalid-feedback">{errors.status}</div>}
+                                    {<div className="invalid-feedback">{errors.portfolio}</div>}
                                     <small className="form-text text-muted">
                                         Could be your own or a company website
                   </small>

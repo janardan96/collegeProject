@@ -21,13 +21,14 @@ const LogInSignUp = () => (
 const LogOutDiv = (props) => (
   <ul className="navbar-nav ml-auto">
     <li className="nav-item">
-      <Link className="nav-link" to="">Dashboard</Link>
+      <Link className="nav-link" to="/">Dashboard</Link>
     </li>
+
     <li>
-      <a href="#" className="nav-link" onClick={(e) => props.logout(e)}>
+      <a href="/" className="nav-link" onClick={(e) => props.logout(e)}>
         <img
           className="rounded-circle"
-          src={props.user.avatar}
+          src={props.user.profilePic}
           alt={props.user.name.charAt(0).toUpperCase() + props.user.name.slice(1)}
           style={{ width: "25px", marginRight: "5px" }}
         />
