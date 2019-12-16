@@ -1,0 +1,14 @@
+First run "npm install".
+Then run "npm client-install".
+Then Go into the config folder and create "keys.js" File
+In keys.js File write Your Credentials with this code:
+module.exports = {
+  secretOrkey: "secret",
+  cloudinary_cloud_name: "dpumghgnd",
+  cloudinary_api_key: "cloudinary_api_key", //put your keys
+  cloudinary_api_secret: "CLOUDINARY_SECRET", //put your keys
+  sendgridApi:"YOUR_SENDGRID_API_KEY"  //put your keys and 
+};
+
+
+Make sure you have install mogodb Locally.
