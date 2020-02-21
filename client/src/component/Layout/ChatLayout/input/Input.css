@@ -1,0 +1,23 @@
+.form {
+    /* display: flex; */
+    border-top: 2px solid #D3D3D3;
+    padding: 10px;
+  }
+  
+.textArea{
+    border-radius: 6px;
+    padding: 12px;
+    border: 1px solid #d8d3d3;
+    width: 100%;
+}
+  
+  .sendButton {
+    color: #fff !important;
+    text-transform: uppercase;
+    text-decoration: none;
+    background: #2979FF;
+    padding: 20px;
+    display: inline-block;
+    border: none;
+    width: 20%;
+  }

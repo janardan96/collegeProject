@@ -35,9 +35,27 @@ const MentorSchema = new Schema({
   bio: {
     type: String
   },
+  recieveRequest: [
+    {
+      studentId: { type: Schema.Types.ObjectId, ref: "student" },
+      studentName: { type: String, default: "" },
+      profilePic: { type: String, default: "" },
+      userId: { type: String, default: "" }
+
+    }
+  ],
+  friendsList: [
+    {
+      friendId: { type: Schema.Types.ObjectId, ref: "student" },
+      friendName: { type: String, default: "" },
+      profilePic: { type: String, default: "" },
+      userId: { type: String, default: "" }
+    }
+  ],
   githubusername: {
     type: String
   },
+  totalRequest: { type: Number, default: 0 },
   review: [
     {
       user: {

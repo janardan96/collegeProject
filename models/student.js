@@ -33,6 +33,24 @@ const StudentSchema = new Schema({
     type: [String],
     required: true
   },
+  sentRequest: [
+    {
+      mentorId: { type: Schema.Types.ObjectId, ref: "mentor" },
+      mentorName: { type: String, default: "" },
+      profilePic: { type: String, default: "" },
+      userId: { type: String, default: "" }
+
+    }
+  ],
+  friendsList: [
+    {
+      friendId: { type: Schema.Types.ObjectId, ref: "mentor" },
+      friendName: { type: String, default: "" },
+      profilePic: { type: String, default: "" },
+      userId: { type: String, default: "" }
+
+    }
+  ],
   bio: {
     type: String
   },

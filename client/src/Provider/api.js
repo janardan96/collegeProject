@@ -12,6 +12,14 @@ export const deleteEducation = "/api/student/education";
 export const getProfileAll = "/api/student/profile/all";
 export const getMentorProfileAll = "/api/mentor/profile/all";
 export const individualProfile = "/api/student/user";
+export const mentorProfile = '/api/mentor/user';
+export const getMentorProfile = "/api/mentor/profile"
 export const createMentorProfile = "/api/mentor/profile";
 export const mentorExperience = "/api/mentor/experience";;
 export const mentorProfileSelf = "/api/mentor/profile"
+
+// FriendRequest
+export const getFriendRequest = "/api/friendReq/getRequestProfile";
+export const sendFriendRequest = "/api/friendReq/sendRequest";
+export const acceptRequest = "/api/friendReq/acceptRequest"
+export const cancelRequest = "/api/friendReq/cancelRequest";

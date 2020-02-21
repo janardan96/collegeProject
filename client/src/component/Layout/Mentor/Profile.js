@@ -19,13 +19,15 @@ class Profile extends Component {
 
     async componentDidMount() {
         try {
+            console.log("Params if ", this.props.match.params.userId)
             if (this.props.match.params.userId) {
-                const profilesArray = await axios.get(`${URL.individualProfile}/${this.props.match.params.userId}`);
+                const profilesArray = await axios.get(`${URL.mentorProfile}/${this.props.match.params.userId}`);
+                console.log("Profile", profilesArray)
                 this.setState({ loading: false, profile: profilesArray.data });
             }
 
         } catch (error) {
-            this.setState({ errors: error.response.data })
+            this.setState({ errors: error })
         }
     }
 
@@ -51,7 +53,7 @@ class Profile extends Component {
                     </div>
                     <ProfileHeader profile={profile} />
                     <ProfileAbout profile={profile} />
-                    <ProfileCred education={profile.education} experience={profile.internships} />
+                    <ProfileCred experience={profile.experience} />
                     {profile.githubusername ? <ProfileGithub username={profile.githubusername} /> : null}
 
                 </div>

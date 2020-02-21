@@ -16,7 +16,8 @@ class ProfileItems extends Component {
                         <h5>Professional in {profile.profiency}</h5>
                         <p>{profile.status} {_.isEmpty(profile.company) ? null : (<span>at {profile.company}</span>)}</p>
                         <p>{_.isEmpty(profile.location) ? null : (<span>{profile.location}</span>)}</p>
-                        <Link to={`/profile/${profile.user._id}`} className="btn btn-info">View Profile</Link>
+                        <Link to={`/profile/${profile._id}`} className="btn btn-primary">View Profile</Link>
+                        <button className="btn btn-primary ml-3" onClick={() => this.props.sendRequest(profile._id)}>Sent Request</button>
                     </div>
                     <div className="col-md-4 d-none d-md-block">
                         <h4>Skill Set</h4>

@@ -8,6 +8,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const passport = require("passport");
 const SocketIO = require("socket.io");
+const http = require("http");
 
 mongoose
   .connect(process.env.MONGODB_URI || "mongodb://localhost/StudentMentor")
@@ -42,12 +43,15 @@ app.use("/api/post", post);
 app.use("/api/mentor", mentor);
 app.use("/api/friendReq", friendReq);
 
-const server = app.listen(port, () =>
+let server = http.createServer(app)
+const io = SocketIO(server);
+
+
+server.listen(port, () =>
   console.log(`Server on port no. ${port}`)
 );
 
-const io = SocketIO(server);
-require("./socket")(io);
+require("./socketServer/friendReq.js")(io);
 // const io = require("./socket").init(server);
 
 // io.on("connection", (socket) => {

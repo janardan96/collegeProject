@@ -4,11 +4,15 @@ import React, { Component } from "react";
 import AuthContext from "./AuthContext";
 import jwt_decode from "jwt-decode";
 import setAuthToken from "./SetAuthToken";
+import io from "socket.io-client";
+let socket;
 
 export class AuthStore extends Component {
   state = {
     isAuth: false,
-    user: {}
+    user: {},
+    socket: null,
+    allConnectedUser: {}
   };
 
   constructor(props) {
@@ -21,22 +25,35 @@ export class AuthStore extends Component {
     const token = localStorage.getItem("token");
     if (token !== null) {
       const decode = jwt_decode(localStorage.token);
+      socket = io('localhost:5000');
+      socket.on("connect", () => {
+        console.log("Connected in Browser");
+
+      });
       this.setState({ isAuth: true });
-      this.setState({ user: decode });
+      this.setState({ user: decode, socket: socket });
+
       setAuthToken(token);
       window.location.ref = "/dashboard";
+      console.log("Dashboard");
       const currentTime = Date.now() / 1000;
+
       if (decode.exp < currentTime) {
         localStorage.removeItem("token");
         delete axios.defaults.headers.common["Authorization"];
         window.location.href = "/login";
       }
+
     }
   }
 
 
   AuthState = (userDecode) => {
-    this.setState({ isAuth: true, user: userDecode });
+    socket = io('localhost:5000');
+    socket.on("connect", () => {
+      console.log("Connected in Browser")
+    });
+    this.setState({ isAuth: true, user: userDecode, socket: socket });
   };
 
   async deleteAccount() {

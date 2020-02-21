@@ -5,7 +5,7 @@ const passport = require("passport");
 
 router.get("/", Request.test);
 router.get(
-  "/getRequestProfile",
+  "/getRequestProfile/:id",
   passport.authenticate("jwt", {
     session: false
   }),

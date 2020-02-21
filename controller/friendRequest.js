@@ -15,27 +15,30 @@ exports.sendingRequest = async (req, res) => {
     }
 
     if (req.body.id) {
-      const recieveUser = await User.findById(req.body.id).catch((err) =>
+      const mentor = await Mentor.findById(req.body.id).populate("user", ["name", "email", "profilePic"]).catch((err) =>
         res.status(404).json({ notFound: "User not found" })
       );
-      const recieverUser = await User.update(
+      const student = await studentProfile.findById(req.body.studentId).populate("user", ["name", "email", "profilePic"]).catch((err) => {
+        res.status(404).json({ notFound: "Student not found" })
+      })
+      const recieverUser = await Mentor.updateOne(
         {
           _id: req.body.id,
-          "recieveRequest.userId": { $ne: req.user.id },
-          "friendsList.friendId": { $ne: req.user.id }
+          "recieveRequest.studentId": { $ne: student._id },
+          "friendsList.friendId": { $ne: student._id }
         },
         {
           $push: {
-            recieveRequest: { userId: req.user.id, userName: req.user.name }
+            recieveRequest: { studentId: student._id, studentName: student.user.name, profilePic: student.user.profilePic, userId: student.user._id }
           },
           $inc: { totalRequest: 1 }
         }
       );
-      const senderUser = await User.update(
-        { _id: req.user.id, "sentRequest.userId": { $ne: req.body.id } },
+      const senderUser = await studentProfile.updateOne(
+        { _id: student.id, "sentRequest.mentorId": { $ne: req.body.id } },
         {
           $push: {
-            sentRequest: { userId: recieveUser.id, userName: recieveUser.name }
+            sentRequest: { mentorId: req.body.id, mentorName: mentor.user.name, profilePic: mentor.user.profilePic, userId: mentor.user._id }
           }
         }
       );
@@ -48,8 +51,8 @@ exports.sendingRequest = async (req, res) => {
 
 exports.senderProfile = async (req, res) => {
   try {
-    const senderProfile = await User.findById(req.user.id).populate(
-      "recieveRequest.userId"
+    const senderProfile = await Mentor.findById(req.params.id).populate(
+      "recieveRequest.studentId"
     );
     res.json(senderProfile.recieveRequest);
   } catch (error) {
@@ -59,38 +62,41 @@ exports.senderProfile = async (req, res) => {
 
 exports.acceptingRequest = async (req, res) => {
   try {
-    if (req.body.senderId) {
-      const sender = await User.findById(req.body.senderId).catch((err) =>
+    if (req.body.studentId) {
+      const student = await studentProfile.findById(req.body.studentId).populate("user", ["name", "email", "profilePic"]).catch((err) =>
         res.status(404).json({ notFound: "User not found" })
       );
-      const recieverUser = await User.update(
+      const mentor = await Mentor.findById(req.body.id).populate("user", ["name", "email", "profilePic"]).catch((err) =>
+        res.status(404).json({ notFound: "User not found" })
+      );
+      const recieverUser = await Mentor.updateOne(
         {
-          _id: req.user.id,
-          "friendsList.friendId": { $ne: req.body.senderId }
+          _id: req.body.id,
+          "friendsList.friendId": { $ne: req.body.studentId }
         },
         {
           $push: {
-            friendsList: { friendId: sender.id, friendName: sender.name }
+            friendsList: { friendId: student._id, friendName: student.user.name, profilePic: student.user.profilePic, userId: student.user._id }
           },
           $pull: {
-            recieveRequest: { userId: sender.id, userName: sender.name }
+            recieveRequest: { studentId: student._id, studentName: student.user.name, profilePic: student.user.profilePic, userId: student.user._id }
           },
           $inc: { totalRequest: -1 }
         }
       );
 
-      const senderUser = await User.update(
-        { _id: sender.id, "friendsList.friendId": { $ne: req.user.id } },
+      const senderUser = await studentProfile.updateOne(
+        { _id: student.id, "friendsList.friendId": { $ne: mentor.id } },
         {
           $push: {
-            friendsList: { friendId: req.user.id, friendName: req.user.name }
+            friendsList: { friendId: mentor._id, friendName: mentor.user.name, profilePic: mentor.user.profilePic, userId: mentor.user._id }
           },
           $pull: {
-            sentRequest: { userId: req.user.id, userName: req.user.name }
+            sentRequest: { mentorId: mentor._id, mentorName: mentor.user.name, profilePic: mentor.user.profilePic, userId: mentor.user._id }
           }
         }
       );
-      res.json({ success: true });
+      res.json({ success: senderUser });
     }
   } catch (error) {
     res.status(400).json({ badRequest: "Something is wrong" });
@@ -100,27 +106,30 @@ exports.acceptingRequest = async (req, res) => {
 exports.cancelRequest = async (req, res) => {
   try {
     if (req.body.senderId) {
-      const sender = await User.findById(req.body.senderId).catch((err) =>
+      const student = await studentProfile.findById(req.body.studentId).populate("user", ["name", "email", "profilePic"]).catch((err) =>
         res.status(404).json({ notFound: "User not found" })
       );
-      const recieverUser = await User.update(
+      const mentor = await Mentor.findById(req.body.id).populate("user", ["name", "email", "profilePic"]).catch((err) =>
+        res.status(404).json({ notFound: "User not found" })
+      );
+      const recieverUser = await Mentor.updateOne(
         {
-          _id: req.user.id,
-          "recieveRequest.userId": { $eq: req.body.senderId }
+          _id: mentor.id,
+          "recieveRequest.studentId": { $eq: req.body.studentId }
         },
         {
           $pull: {
-            recieveRequest: { userId: sender.id, userName: sender.name }
+            recieveRequest: { studentId: student._id, studentName: student.user.name, profilePic: student.user.profilePic, userId: student.user._id }
           },
           $inc: { totalRequest: -1 }
         }
       );
 
-      const senderUser = await User.update(
-        { _id: sender.id, "sentRequest.userId": { $eq: req.user.id } },
+      const senderUser = await studentProfile.updateOne(
+        { _id: student.id, "sentRequest.mentorId": { $eq: mentor._id } },
         {
           $pull: {
-            sentRequest: { userId: req.user.id, userName: req.user.name }
+            sentRequest: { mentorId: mentor._id, mentorName: mentor.user.name, profilePic: mentor.user.profilePic, userId: mentor.user._id }
           }
         }
       );

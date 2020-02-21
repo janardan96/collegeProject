@@ -43,7 +43,8 @@ const UserSchema = new Schema(
     friendsList: [
       {
         friendId: { type: Schema.Types.ObjectId, ref: "users" },
-        friendName: { type: String, default: "" }
+        friendName: { type: String, default: "" },
+        profilePic: { type: String, default: "" }
       }
     ],
     totalRequest: { type: Number, default: 0 }

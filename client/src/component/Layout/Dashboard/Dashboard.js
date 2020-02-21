@@ -30,14 +30,14 @@ class Dashboard extends Component {
                     profile: res.data,
                     errors: res.data.noProfile
                 });
+
             })
-            .catch((err) => this.setState({ errors: err.response.data }));;
+            .catch((err) => this.setState({ errors: err.response.data }));
 
         const mentor = await axios.get(Url.mentorProfileSelf, { headers: { Authorization: `${localStorage.getItem("token")}` } });
         if (!mentor.data.noProfile) {
             this.setState({ mentor: true });
         }
-        console.log(mentor)
     }
 
     // Delete Experience
@@ -70,6 +70,7 @@ class Dashboard extends Component {
     render() {
         const { profile, loading } = this.state;
         const { name } = this.context.user;
+        const { socket } = this.context
         // console.log(errors);
         // console.log(loading);
         // console.log(profile)
@@ -94,7 +95,7 @@ class Dashboard extends Component {
                         </p>
                         <ProfileAction />
                         {/* Skills */}
-                        {profile.skills.length > 0 ? <Skills profile={profile} /> : ""}
+                        {profile.skills.length > 0 ? <Skills profile={profile} socket={socket} /> : ""}
                         {/* Internships */}
                         {profile.internships.length > 0 ? <Experience
                             internships={profile.internships}
@@ -140,7 +141,6 @@ class Dashboard extends Component {
                             <div className="d-flex justify-content-between align-items-center">
                                 <h1 className="display-4  ">Dashboard</h1>
                                 {mentorLink}
-
                             </div>
 
                             {dashboardContent}

@@ -102,7 +102,7 @@ exports.getMentorId = async (req, res) => {
   try {
     const errors = {};
     const user = await Mentor.findOne({
-      user: req.params.mentorId
+      _id: req.params.mentorId
     }).populate("user", ["name", "email", "profilePic"]);
     if (!user) {
       errors.noUser = "There is no profile for this mentor";

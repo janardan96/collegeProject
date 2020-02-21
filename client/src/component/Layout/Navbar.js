@@ -1,7 +1,40 @@
-import React from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import * as ROUTES from "../../Provider/route";
 import AuthContext from "../../Provider/AuthContext";
+import * as URL from "../../Provider/api"
+import axios from "axios";
+import io from "socket.io-client";
+
+const acceptRequest = async (id, studentId) => {
+  try {
+    console.log("Iddd", id)
+    console.log("StudentId", studentId)
+    const senderId = {
+      id: id,
+      studentId: studentId
+    }
+    const acceptingRequest = await axios.post(URL.acceptRequest, senderId);
+    console.log("Accepting Request", acceptingRequest);
+  } catch (error) {
+
+  }
+}
+
+const cancelRequest = async (id, studentId) => {
+  try {
+    console.log("Iddd", id)
+    console.log("StudentId", studentId)
+    const senderId = {
+      id: id,
+      studentId: studentId
+    }
+    const acceptingRequest = await axios.post(URL.cancelRequest, senderId);
+    console.log("Accepting Request", acceptingRequest);
+  } catch (error) {
+
+  }
+}
 
 const LogInSignUp = () => (
   <ul className="navbar-nav ml-auto">
@@ -21,7 +54,79 @@ const LogInSignUp = () => (
 const LogOutDiv = (props) => (
   <ul className="navbar-nav ml-auto">
     <li className="nav-item">
-      <Link className="nav-link" to="/">Dashboard</Link>
+      <Link className="nav-link" to={ROUTES.Dashboard}>Dashboard</Link>
+    </li>
+    <li>
+      <div className="dropdown">
+        <a href="#" className="dropdown-toggle" data-toggle="dropdown" id="dropdownMenu2" style={{
+          fontSize: "20px", color: "white"
+        }}>
+          <span className="glyphicon fa fa-bell nav-glyphicon"></span><b className="caret"></b>
+          {props.totalRequest.length > 0 ? <span className="label label-primary nav-label-icon" style={{
+            fontSize: "12px",
+            color: "white",
+            background: "#e86464"
+          }}>{props.totalRequest.length}</span> : <span className="label label-primary nav-label-icon" style={{
+            display: "none"
+          }}></span>}
+
+        </a>
+
+        <ul className="dropdown-menu" aria-labelledby="dropdownMenu2" style={{
+          width: "300px",
+          left: "-195px",
+          height: "300px"
+        }}>
+          <div className="row">
+            <div className="dropdown-tag d-block">
+              <h3 className="text-center dropdown-tag-head" >
+                Friend Requests
+							</h3>
+            </div>
+          </div>
+          {props.totalRequest.length > 0 ? props.totalRequest.map((value, i) => <li key={i}>
+            <div className="col-md-12" style={{ marginTop: "12px" }}>
+              <div className="row">
+                <div className="col-md-3">
+                  <p className="text-center" style={{
+                    marginTop: "15px",
+                    width: "65px",
+                    marginBottom: "0px"
+                  }}>
+                    <img src={value.profilePic} className="img-circle img-responsive dropdown-img" />
+                  </p>
+                </div>
+                <div className="col-md-9 pleft-0">
+                  <div className="row">
+                    <div className="col-md-12">
+                      <div className="col-md-12">
+                        <p className="text-left">
+                          <strong id={value._id}>{value.studentName}</strong>
+                        </p>
+                      </div>
+                      <div className="col-md-12">
+                        <div className="row">
+                          <div className="col-md-6 col-sm-6 col-xs-6">
+                            <button type="submit" name="accept" id="accept_friend" className="btn btn-default drop-accept accept" onClick={() => acceptRequest(props.mentorId, props.totalRequest[i].studentId._id)}><i className="fa fa-check" aria-hidden="true"></i> Accept</button>
+                          </div>
+                          <div className="col-md-6 col-sm-6 col-xs-6">
+                            <button type="submit" name="cancel" className="btn drop-cancel remove" id="cancel_friend">
+                              <i className="fa fa-times" aria-hidden="true" onClick={() => cancelRequest(props.mentorId, props.totalRequest[i].studentId._id)}></i> Cancel
+												</button>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <hr />
+            </div>
+          </li>) : <p className="text-center">No Friend Request</p>}
+
+        </ul>
+      </div>
     </li>
 
     <li>
@@ -35,47 +140,83 @@ const LogOutDiv = (props) => (
         Logout
       </a>
     </li>
-  </ul>
+  </ul >
 );
 
-const Navbar = (props) => (
-  <AuthContext.Consumer>
-    {({ isAuth, logout, user }) => (
-      <nav className="navbar navbar-expand-sm navbar-dark bg-dark mb-4">
-        <div className="container">
-          <Link className="navbar-brand" to="/">
-            E- Mentoring Connector
-          </Link>
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-toggle="collapse"
-            data-target="#mobile-nav"
-          >
-            <span className="navbar-toggler-icon"></span>
-          </button>
+const Navbar = (props) => {
+  const authContext = useContext(AuthContext);
+  const [user, setUser] = useState({})
+  const [totalRequest, setRequest] = useState([]);
+  const [newRquest, setNewRequest] = useState([]);
+  const [studentId, setId] = useState("");
+  const [mentorId, setMentorId] = useState("");
+  let socket;
 
-          <div className="collapse navbar-collapse" id="mobile-nav">
-            <ul className="navbar-nav mr-auto">
-              <li className="nav-item">
-                <Link className="nav-link" to={ROUTES.MentorsProfile}>
-                  Mentors
-                </Link>
-              </li>
-            </ul>
+  useEffect(() => {
+    if (authContext.isAuth) {
+      async function dealMentor() {
+        const mentorProfile = await axios.get(URL.getMentorProfile, { headers: { Authorization: `${localStorage.getItem("token")}` } });
+        setMentorId(mentorProfile.data._id);
+        if (mentorProfile.data._id) {
+          const friendRequest = await axios.get(`${URL.getFriendRequest}/${mentorProfile.data._id}`)
+          setRequest(friendRequest.data);
+        }
+        setUser(authContext.user)
+        const getProfile = await axios.get(URL.getProfile, { headers: { Authorization: `${localStorage.getItem("token")}` } });
+        setId(getProfile.data._id)
+      }
+      dealMentor()
+    }
 
-            <div>
-              {!isAuth ? (
-                <LogInSignUp />
-              ) : (
-                  <LogOutDiv logout={logout} user={user} />
-                )}
-            </div>
+  }, [authContext, totalRequest]);
+
+
+  useEffect(() => {
+    if (authContext.isAuth) {
+
+      authContext.socket.emit('login', { userId: authContext.user.id });
+
+    }
+
+  }, [authContext.isAuth, newRquest])
+
+
+  return (
+    <nav className="navbar navbar-expand-sm navbar-dark bg-dark mb-4">
+      <div className="container">
+        <Link className="navbar-brand" to={ROUTES.Dashboard}>
+          E- Mentoring Connector
+            </Link>
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-toggle="collapse"
+          data-target="#mobile-nav"
+        >
+          <span className="navbar-toggler-icon"></span>
+        </button>
+
+        <div className="collapse navbar-collapse" id="mobile-nav">
+          <ul className="navbar-nav mr-auto">
+            <li className="nav-item">
+              <Link className="nav-link" to={ROUTES.MentorsProfile}>
+                Mentors
+                  </Link>
+            </li>
+          </ul>
+
+          <div>
+            {!authContext.isAuth ? (
+              <LogInSignUp />
+            ) : (
+                <LogOutDiv logout={authContext.logout} user={authContext.user} totalRequest={totalRequest} studentId={studentId} mentorId={mentorId} />
+              )}
           </div>
         </div>
-      </nav>
-    )}
-  </AuthContext.Consumer>
-);
+      </div>
+    </nav>
+  )
+}
+
 
 export default Navbar;

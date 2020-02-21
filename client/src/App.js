@@ -23,6 +23,7 @@ import NotFound from "./component/Layout/NotFound/NotFound";
 import MentorDashboard from "./component/Layout/MentorDashboard/Mdashboard"
 import CreateMentorProfile from "./component/Layout/create-profile/MentorProfile";
 import MentorExperience from "./component/Layout/Experience/Addexperience";
+import Chat from "./component/Layout/ChatLayout/chat/chat";
 class App extends Component {
 
   state = {};
@@ -51,6 +52,7 @@ class App extends Component {
                   path="/create-profile"
                   component={CreateProfile}
                 />
+
                 <PrivateRoute path="/edit-profile" component={Editprofile} />
                 <PrivateRoute
                   path="/add-experience"
@@ -60,6 +62,7 @@ class App extends Component {
                 <PrivateRoute path="/create-mentor" component={CreateMentorProfile} />
                 <PrivateRoute path="/mentor/add-experience" component={AddInternship} />
                 <PrivateRoute path="/mentor/dashboard" component={MentorDashboard} />
+                <PrivateRoute path="/user/chat/:id" component={Chat} />
               </Switch>
               <Route path="/not-found" component={NotFound} />
 
