@@ -10,6 +10,8 @@ const passport = require("passport");
 const SocketIO = require("socket.io");
 const http = require("http");
 const AWS = require('aws-sdk');
+const keys = require("./config/keys");
+
 
 mongoose
   .connect(process.env.MONGODB_URI || "mongodb://localhost/StudentMentor")
@@ -65,8 +67,8 @@ let server = http.createServer(app)
 const io = SocketIO(server);
 
 const translate = new AWS.Translate({
-  accessKeyId: "AKIA5YG5XSYK5Z45IJ4O",
-  secretAccessKey: "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",
+  accessKeyId: keys.amazonAccessKeyId,
+  secretAccessKey: keys.amazonSecretAccessKeyId,
   region: 'us-east-2',
 });
 
