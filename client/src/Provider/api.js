@@ -23,3 +23,6 @@ export const getFriendRequest = "/api/friendReq/getRequestProfile";
 export const sendFriendRequest = "/api/friendReq/sendRequest";
 export const acceptRequest = "/api/friendReq/acceptRequest"
 export const cancelRequest = "/api/friendReq/cancelRequest";
+
+// Language Translate
+export const languageTranslate = "/translate"

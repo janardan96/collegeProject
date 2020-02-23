@@ -3,15 +3,17 @@ import AuthContext from "../../../../../Provider/AuthContext"
 
 import './Message.css';
 
+// KEY ID AKIA5YG5XSYK5Z45IJ4O;
+// Access KEY wpHNH3Tdqk56sa14js/nkLxG9aZVI945m7fRqFt6;
+
 import ReactEmoji from 'react-emoji';
 
-const Message = ({ message: { text }, id }) => {
+const Message = ({ message: { message, senderId }, id }) => {
     let isSentByCurrentUser = false;
     const authContext = useContext(AuthContext);
-    console.log("Auth", authContext)
     // const trimmedName = name.trim().toLowerCase();
 
-    if (id !== authContext.user.id) {
+    if (senderId === authContext.user.id) {
         isSentByCurrentUser = true;
     }
 
@@ -21,14 +23,14 @@ const Message = ({ message: { text }, id }) => {
                 <div className="messageContainer justifyEnd">
                     {/* <p className="sentText pr-10">{trimmedName}</p> */}
                     <div className="messageBox backgroundBlue">
-                        <p className="messageText colorWhite">{ReactEmoji.emojify(text)}</p>
+                        <p className="messageText colorWhite">{ReactEmoji.emojify(message)}</p>
                     </div>
                 </div>
             )
             : (
                 <div className="messageContainer justifyStart">
                     <div className="messageBox backgroundLight">
-                        <p className="messageText colorDark">{ReactEmoji.emojify(text)}</p>
+                        <p className="messageText colorDark">{ReactEmoji.emojify(message)}</p>
                     </div>
                     {/* <p className="sentText pl-10 ">{user}</p> */}
                 </div>

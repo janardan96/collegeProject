@@ -7,7 +7,7 @@ module.exports = (io) => {
       console.log('a user ' + data.userId + ' connected');
       users[socket.id] = data.userId;
       io.emit("online", users)
-      // console.log(users)
+      console.log(users)
     });
 
     // socket.on("friendRequest", (friend) => {
@@ -22,9 +22,11 @@ module.exports = (io) => {
       socket.emit("privateChat", users)
     });
 
-    socket.on("sendMessage", (message) => {
+    socket.on("sendMessage", (message, callback) => {
       console.log("messages", message);
+      io.to(`${message.recieverId}`).emit('message', message);
       console.log("Id", socket.id)
+      callback()
     })
 
     socket.on("disconnect", () => {

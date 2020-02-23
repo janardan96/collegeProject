@@ -9,6 +9,7 @@ const mongoose = require("mongoose");
 const passport = require("passport");
 const SocketIO = require("socket.io");
 const http = require("http");
+const AWS = require('aws-sdk');
 
 mongoose
   .connect(process.env.MONGODB_URI || "mongodb://localhost/StudentMentor")
@@ -43,8 +44,31 @@ app.use("/api/post", post);
 app.use("/api/mentor", mentor);
 app.use("/api/friendReq", friendReq);
 
+app.post('/translate', (req, res) => {
+  const { message, lang } = req.body;
+  const params = {
+    SourceLanguageCode: 'auto',
+    TargetLanguageCode: lang,
+    Text: message,
+  };
+
+  translate.translateText(params, (err, data) => {
+    if (err) {
+      return res.send(err);
+    };
+
+    res.json(data);
+  });
+});
+
 let server = http.createServer(app)
 const io = SocketIO(server);
+
+const translate = new AWS.Translate({
+  accessKeyId: "AKIA5YG5XSYK5Z45IJ4O",
+  secretAccessKey: "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",
+  region: 'us-east-2',
+});
 
 
 server.listen(port, () =>

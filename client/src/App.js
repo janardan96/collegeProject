@@ -43,6 +43,7 @@ class App extends Component {
                 <Route path="/forgot" component={ForgotPassword} />
                 <Route path="/profiles" component={Profiles} />
                 <Route path="/profile/:userId" component={Profile} />
+                {/* <Route path="/student/:userId" component={Profile} /> */}
                 <Route
                   path="/user/password/reset/:token"
                   component={ResetPassword}
