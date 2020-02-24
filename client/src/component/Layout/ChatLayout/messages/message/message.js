@@ -3,8 +3,7 @@ import AuthContext from "../../../../../Provider/AuthContext"
 
 import './Message.css';
 
-// KEY ID AKIA5YG5XSYK5Z45IJ4O;
-// Access KEY wpHNH3Tdqk56sa14js/nkLxG9aZVI945m7fRqFt6;
+
 
 import ReactEmoji from 'react-emoji';
 
