@@ -5,31 +5,19 @@ import { Link } from "react-router-dom";
 
 const SkillSet = (props) => {
     const [activeUsers, setActiveUsers] = useState([]);
+    const [allusers, setUsers] = useState({});
     const { profile, socket } = props;
 
+    // useEffect(() => {
+    socket.on("updated-users", (users) => {
+        setUsers(users)
+    })
     useEffect(() => {
-        socket.on("online", (users) => {
-            for (const j in users) {
-                // console.log("Connected", users[j]);
-                setActiveUsers([...activeUsers, users[j]])
-            }
-        })
-
-        socket.on("offline", (users) => {
-            for (const j in users) {
-                // console.log("Disconnected", users[j]);
-                setActiveUsers(activeUsers.filter(el => el = 3 == users[j]))
-            }
-        })
-        return () => {
-            socket.on("online")
+        for (const j in allusers) {
+            setActiveUsers([allusers[j].userId])
         }
+    }, [allusers])
 
-    }, [activeUsers]);
-
-
-
-    console.log("All usrs", activeUsers)
 
 
     const skillSet = profile.skills.map((skill, i) => (

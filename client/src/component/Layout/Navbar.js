@@ -174,7 +174,7 @@ const Navbar = (props) => {
   useEffect(() => {
     if (authContext.isAuth) {
 
-      authContext.socket.emit('login', { userId: authContext.user.id });
+      authContext.socket.emit('login', { userId: authContext.user.id, name: authContext.user.name });
 
     }
 

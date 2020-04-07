@@ -31,7 +31,7 @@ const MasterDashboard = () => {
         authContext.socket.on("offline", (users) => {
             for (const j in users) {
                 // console.log("Disconnected", users[j]);
-                setActiveUsers(activeUsers.filter(el => el = 3 == users[j]))
+                setActiveUsers(activeUsers.filter(el => el === users[j]))
             }
         })
         return () => {

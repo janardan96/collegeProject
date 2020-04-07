@@ -1,4 +1,5 @@
 const studentProfile = require("../models/student");
+const mentorProfile = require("../models/mentor");
 const User = require("../models/userModel");
 
 // validation
@@ -240,6 +241,7 @@ exports.deleteProfile = async (req, res) => {
       user: req.user.id
     });
     await User.findByIdAndRemove(req.user.id);
+    await mentorProfile.findByIdAndRemove(req.user.id)
     res.json({ success: "User deleted successfully" });
   } catch (error) {
     res.status(400).json({ badRequest: "Something is wrong" });

@@ -9,8 +9,10 @@ const mongoose = require("mongoose");
 const passport = require("passport");
 const SocketIO = require("socket.io");
 const http = require("http");
-const AWS = require('aws-sdk');
 const keys = require("./config/keys");
+const aws = require('aws-sdk');
+
+// Aws
 
 
 mongoose
@@ -46,31 +48,31 @@ app.use("/api/post", post);
 app.use("/api/mentor", mentor);
 app.use("/api/friendReq", friendReq);
 
-app.post('/translate', (req, res) => {
-  const { message, lang } = req.body;
-  const params = {
-    SourceLanguageCode: 'auto',
-    TargetLanguageCode: lang,
-    Text: message,
-  };
+// app.post('/translate', (req, res) => {
+//   const { message, lang } = req.body;
+//   const params = {
+//     SourceLanguageCode: 'auto',
+//     TargetLanguageCode: lang,
+//     Text: message,
+//   };
 
-  translate.translateText(params, (err, data) => {
-    if (err) {
-      return res.send(err);
-    };
+//   translate.translateText(params, (err, data) => {
+//     if (err) {
+//       return res.send(err);
+//     };
 
-    res.json(data);
-  });
-});
+//     res.json(data);
+//   });
+// });
 
 let server = http.createServer(app)
 const io = SocketIO(server);
 
-const translate = new AWS.Translate({
-  accessKeyId: keys.amazonAccessKeyId,
-  secretAccessKey: keys.amazonSecretAccessKeyId,
-  region: 'us-east-2',
-});
+// const translate = new AWS.Translate({
+//   accessKeyId: keys.amazonAccessKeyId,
+//   secretAccessKey: keys.amazonSecretAccessKeyId,
+//   region: 'us-east-2',
+// });
 
 
 server.listen(port, () =>

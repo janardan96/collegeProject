@@ -7,7 +7,6 @@ import './Input.css';
 const Input = ({ setMessage, sendMessage, message, language, updateLanguage }) => {
 
     const change = (e) => {
-        console.log(e.target.value)
         setMessage(e.target.value)
     }
 
