@@ -1,12 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import _ from "lodash";
 import { Link } from "react-router-dom";
+import clsx from "clsx";
 
 
 const SkillSet = (props) => {
     const [activeUsers, setActiveUsers] = useState([]);
     const [allusers, setUsers] = useState({});
     const { profile, socket } = props;
+
+    const stars = [1, 2, 3, 4, 5]
+
+    // const style = {
+
+    // }
 
     // useEffect(() => {
     socket.on("updated-users", (users) => {
@@ -53,24 +60,35 @@ const SkillSet = (props) => {
                             }}>
                                 <img src={el.profilePic} className="rounded-circle" alt={el.name} style={{ width: "100%" }} />
                             </div>
-                            <div className="col-sm-10" style={{ paddingTop: "2%", }}>
-                                <Link to={`/profile/${el.friendId}`}><h3 style={{ position: "relative" }}>{el.friendName[0].toUpperCase() + el.friendName.substring(1)}
+                            <div className="col-sm-10 d-flex justify-content-between" style={{ paddingTop: "2%", }}>
+                                <div>
+                                    <Link to={`/profile/${el.friendId}`}><h3 style={{ position: "relative" }}>{el.friendName[0].toUpperCase() + el.friendName.substring(1)}
 
-                                    {activeUsers.includes(el.userId) ? <span style={{
-                                        width: "12px",
-                                        position: "absolute",
-                                        borderRadius: "50%",
-                                        height: "12px",
-                                        backgroundColor: "#26cd26"
-                                    }}></span>
-                                        : ""}
+                                        {activeUsers.includes(el.userId) ? <span style={{
+                                            width: "12px",
+                                            position: "absolute",
+                                            borderRadius: "50%",
+                                            height: "12px",
+                                            backgroundColor: "#26cd26"
+                                        }}></span>
+                                            : ""}
 
+                                    </h3></Link>
+                                    <Link to={`/user/chat/${el.userId}`}>
+                                        <button type="button" className="btn btn-primary mt-3">Chat</button>
+                                    </Link>
+                                </div>
 
+                                <div className="d-flex">
+                                    <h6>Rating</h6>
+                                    <div className="ml-3 d-flex" >
 
-                                </h3></Link>
-                                <Link to={`/user/chat/${el.userId}`}>
-                                    <button type="button" className="btn btn-primary mt-3">Chat</button>
-                                </Link>
+                                        {stars.map((el, i) => {
+                                            return <span className={clsx("fa fa-star", i < 3 && "checked")}></span>
+                                        })}
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
 

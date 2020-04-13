@@ -33,6 +33,11 @@ router.get("/handle/:handle", Student.getHandle);
 
 router.get("/user/:userId", Student.getUserId);
 
+router.get("/recommendation",
+  passport.authenticate("jwt", {
+    session: false
+  }), Student.getRecommendation);
+
 // Experince
 router.post(
   "/internships",

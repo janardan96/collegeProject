@@ -3,6 +3,8 @@ import Spinner from "../Dashboard/spinner";
 import * as Url from "../../../Provider/api";
 import axios from "axios";
 import ProfileItem from './ProfileItems';
+import Navbar from "../Navbar";
+
 // import io from "socket.io-client";
 
 
@@ -19,7 +21,6 @@ class Profiles extends Component {
     };
 
     sendRequest = async (id) => {
-        console.log("adsfadsfre", id);
         try {
             const sendRequestId = {
                 id: id,
@@ -40,13 +41,8 @@ class Profiles extends Component {
     async componentDidMount() {
         try {
             const profilesArray = await axios.get(Url.getMentorProfileAll);
-            const currentUser = await axios
-                .get(Url.getProfile, { headers: { Authorization: `${localStorage.getItem("token")}` } })
-            this.setState({
-                loading: false,
-                profile: currentUser.data.user,
-                studentId: currentUser.data._id
-            });
+            // console.log("ProfileArray", profilesArray)
+
 
             // var param = {
             //     sender: this.state.profile._id
@@ -80,20 +76,23 @@ class Profiles extends Component {
         }
 
         return (
-            <div className="profiles">
-                <div className="container">
-                    <div className="row">
-                        <div className="col-md-12">
-                            <h1 className="display-4 text-center">Mentors Profiles</h1>
-                            <p className="lead text-center">
-                                Browse and connect with mentors
+            <React.Fragment>
+                <Navbar />
+                <div className="profiles">
+                    <div className="container">
+                        <div className="row">
+                            <div className="col-md-12">
+                                <h1 className="display-4 text-center">Mentors Profiles</h1>
+                                <p className="lead text-center">
+                                    Browse and connect with mentors
                             </p>
-                            {profileItems}
+                                {profileItems}
+                            </div>
                         </div>
                     </div>
                 </div>
+            </React.Fragment>
 
-            </div>
         )
     }
 }

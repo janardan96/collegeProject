@@ -7,6 +7,8 @@ import axios from "axios";
 import jwt_decode from "jwt-decode";
 import * as Url from "../../Provider/api";
 import setAuthToken from "../../Provider/SetAuthToken";
+import Navbar from "../Layout/Navbar";
+
 
 class Register extends Component {
   static contextType = AuthContext;
@@ -77,81 +79,84 @@ class Register extends Component {
     return this.context.isAuth ? (
       <Redirect to="/dashboard" />
     ) : (
-      <div className="register  mt-5 pt-4 flex-grow-1">
-        <div className="container">
-          <div className="row">
-            <div className="col-md-8 m-auto">
-              <h1 className="display-4 text-center">Sign Up</h1>
-              <p className="lead text-center">
-                Create your E-Mentor Connector account
+        <div>
+          <Navbar />
+          <div className="register  mt-5 pt-4 flex-grow-1">
+            <div className="container">
+              <div className="row">
+                <div className="col-md-8 m-auto">
+                  <h1 className="display-4 text-center">Sign Up</h1>
+                  <p className="lead text-center">
+                    Create your E-Mentor Connector account
               </p>
-              <form onSubmit={this.onSubmit}>
-                <div className="form-group">
-                  <input
-                    type="text"
-                    className={classnames("form-control form-control-lg", {
-                      "is-invalid": errors.name
-                    })}
-                    placeholder="Name"
-                    name="name"
-                    value={this.state.name}
-                    onChange={this.onChange}
-                  />
-                  {<div className="invalid-feedback">{errors.name}</div>}
-                </div>
-                <div className="form-group">
-                  <input
-                    type="email"
-                    className={classnames("form-control form-control-lg", {
-                      "is-invalid": errors.email
-                    })}
-                    placeholder="Email Address"
-                    name="email"
-                    value={this.state.email}
-                    onChange={this.onChange}
-                  />
-                  {<div className="invalid-feedback">{errors.email}</div>}
+                  <form onSubmit={this.onSubmit}>
+                    <div className="form-group">
+                      <input
+                        type="text"
+                        className={classnames("form-control form-control-lg", {
+                          "is-invalid": errors.name
+                        })}
+                        placeholder="Name"
+                        name="name"
+                        value={this.state.name}
+                        onChange={this.onChange}
+                      />
+                      {<div className="invalid-feedback">{errors.name}</div>}
+                    </div>
+                    <div className="form-group">
+                      <input
+                        type="email"
+                        className={classnames("form-control form-control-lg", {
+                          "is-invalid": errors.email
+                        })}
+                        placeholder="Email Address"
+                        name="email"
+                        value={this.state.email}
+                        onChange={this.onChange}
+                      />
+                      {<div className="invalid-feedback">{errors.email}</div>}
 
-                  <small className="form-text text-muted">
-                    This site uses Gravatar so if you want a profile image, use
-                    a Gravatar email
+                      <small className="form-text text-muted">
+                        This site uses Gravatar so if you want a profile image, use
+                        a Gravatar email
                   </small>
+                    </div>
+                    <div className="form-group">
+                      <input
+                        type="text"
+                        maxLength="10"
+                        pattern="\d{10}"
+                        className={classnames("form-control form-control-lg", {
+                          "is-invalid": errors.mobile
+                        })}
+                        placeholder="Enter Your Mobile no."
+                        name="mobile"
+                        value={this.state.mobile}
+                        onChange={this.onChange}
+                      />
+                      {<div className="invalid-feedback">{errors.mobile}</div>}
+                    </div>
+                    <div className="form-group">
+                      <input
+                        type="password"
+                        className={classnames("form-control form-control-lg", {
+                          "is-invalid": errors.password
+                        })}
+                        placeholder="Password"
+                        name="password"
+                        value={this.state.password}
+                        onChange={this.onChange}
+                      />
+                      {<div className="invalid-feedback">{errors.password}</div>}
+                    </div>
+                    <input type="submit" className="btn btn-info btn-block mt-4" />
+                  </form>
                 </div>
-                <div className="form-group">
-                  <input
-                    type="text"
-                    maxLength="10"
-                    pattern="\d{10}"
-                    className={classnames("form-control form-control-lg", {
-                      "is-invalid": errors.mobile
-                    })}
-                    placeholder="Enter Your Mobile no."
-                    name="mobile"
-                    value={this.state.mobile}
-                    onChange={this.onChange}
-                  />
-                  {<div className="invalid-feedback">{errors.mobile}</div>}
-                </div>
-                <div className="form-group">
-                  <input
-                    type="password"
-                    className={classnames("form-control form-control-lg", {
-                      "is-invalid": errors.password
-                    })}
-                    placeholder="Password"
-                    name="password"
-                    value={this.state.password}
-                    onChange={this.onChange}
-                  />
-                  {<div className="invalid-feedback">{errors.password}</div>}
-                </div>
-                <input type="submit" className="btn btn-info btn-block mt-4" />
-              </form>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    );
+      );
   }
 }
 

@@ -16,6 +16,10 @@ router.post("/login", User.login);
 router.post("/forgot", User.forgot);
 router.get("/reset/:token", User.newPassword);
 router.post("/reset/:token", User.setNewPassword);
+
+router.get("/userStar", passport.authenticate("jwt", {
+  session: false
+}), User.getStar);
 // router.get(
 //   "/aboutme",
 //   passport.authenticate("jwt", {

@@ -17,6 +17,8 @@ export const getMentorProfile = "/api/mentor/profile"
 export const createMentorProfile = "/api/mentor/profile";
 export const mentorExperience = "/api/mentor/experience";;
 export const mentorProfileSelf = "/api/mentor/profile"
+export const getStar = "/api/user/userStar"
+export const giveStar = "/api/mentor/star"
 
 // FriendRequest
 export const getFriendRequest = "/api/friendReq/getRequestProfile";

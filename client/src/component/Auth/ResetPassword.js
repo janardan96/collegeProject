@@ -4,6 +4,7 @@ import AuthContext from "../../Provider/AuthContext";
 import { Redirect } from "react-router-dom";
 import * as Url from "../../Provider/api";
 import axios from "axios";
+import Navbar from "../Layout/Navbar";
 
 class ResetPassword extends Component {
   static contextType = AuthContext;
@@ -66,51 +67,52 @@ class ResetPassword extends Component {
     return this.context.isAuth ? (
       <Redirect to="/dashboard" />
     ) : (
-      <React.Fragment>
-        <div
-          className="login mt-5 pt-4 d-flex flex-grow-1 "
-          style={{ height: "73vh" }}
-        >
-          <div className="container align-self-center">
-            <div className="row">
-              <div className="col-md-8 m-auto">
-                <h5 className="display-4 text-center">Reset Password</h5>
-                <form onSubmit={this.onSubmit}>
-                  <div className="form-group">
-                    <input
-                      type="password"
-                      className={classnames("form-control form-control-lg", {
-                        "is-invalid": errors.password
-                      })}
-                      placeholder="Password"
-                      name="password"
-                      value={this.state.password}
-                      onChange={this.onChange}
-                    />
-                    <input
-                      type="hidden"
-                      name="userId"
-                      value={this.state.userId}
-                    />
-                    <input
-                      type="hidden"
-                      name="passwordToken"
-                      value={this.state.passwordToken}
-                    />
-                    {<div className="invalid-feedback">{errors.password}</div>}
-                  </div>
+        <React.Fragment>
+          <Navbar />
+          <div
+            className="login mt-5 pt-4 d-flex flex-grow-1 "
+            style={{ height: "73vh" }}
+          >
+            <div className="container align-self-center">
+              <div className="row">
+                <div className="col-md-8 m-auto">
+                  <h5 className="display-4 text-center">Reset Password</h5>
+                  <form onSubmit={this.onSubmit}>
+                    <div className="form-group">
+                      <input
+                        type="password"
+                        className={classnames("form-control form-control-lg", {
+                          "is-invalid": errors.password
+                        })}
+                        placeholder="Password"
+                        name="password"
+                        value={this.state.password}
+                        onChange={this.onChange}
+                      />
+                      <input
+                        type="hidden"
+                        name="userId"
+                        value={this.state.userId}
+                      />
+                      <input
+                        type="hidden"
+                        name="passwordToken"
+                        value={this.state.passwordToken}
+                      />
+                      {<div className="invalid-feedback">{errors.password}</div>}
+                    </div>
 
-                  <input
-                    type="submit"
-                    className="btn btn-info btn-block mt-4"
-                  />
-                </form>
+                    <input
+                      type="submit"
+                      className="btn btn-info btn-block mt-4"
+                    />
+                  </form>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </React.Fragment>
-    );
+        </React.Fragment>
+      );
   }
 }
 

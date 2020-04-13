@@ -28,26 +28,15 @@ const UserSchema = new Schema(
     resetPasswordToken: String,
     resetPasswordExpires: Date,
     posts: [],
-    recieveRequest: [
-      {
-        userId: { type: Schema.Types.ObjectId, ref: "users" },
-        userName: { type: String, default: "" }
+    giveStars: [{
+      mentorId: {
+        type: Schema.Types.ObjectId,
+        ref: "mentor"
+      },
+      stars: {
+        type: Number
       }
-    ],
-    sentRequest: [
-      {
-        userId: { type: Schema.Types.ObjectId, ref: "users" },
-        userName: { type: String, default: "" }
-      }
-    ],
-    friendsList: [
-      {
-        friendId: { type: Schema.Types.ObjectId, ref: "users" },
-        friendName: { type: String, default: "" },
-        profilePic: { type: String, default: "" }
-      }
-    ],
-    totalRequest: { type: Number, default: 0 }
+    }]
   },
   { timestamps: true }
 );

@@ -5,6 +5,7 @@ const Mentor = require("../models/mentor");
 // Validation
 const mentorValidation = require("../validation/mentor/mentorValidation");
 const mentorExperienceValidation = require("../validation/mentor/experience");
+const validator = require("validator");
 
 exports.test = (req, res) => {
   res.json({ success: "Success" });
@@ -104,6 +105,8 @@ exports.getMentorId = async (req, res) => {
     const user = await Mentor.findOne({
       _id: req.params.mentorId
     }).populate("user", ["name", "email", "profilePic"]);
+
+
     if (!user) {
       errors.noUser = "There is no profile for this mentor";
       return res.status(404).json(errors);
@@ -172,3 +175,86 @@ exports.deleteProfile = async (req, res) => {
     res.status(400).json({ badRequest: "Something is wrong" });
   }
 };
+
+
+exports.giveStar = async (req, res) => {
+  try {
+    if (req.body.star === undefined) {
+      return res.status(400).json({ error: "Star is needed" })
+    }
+    const mentor = await Mentor.findOne({
+      _id: req.params.mentorId
+    });
+    const user = await User.findById(req.user.id);
+
+    await Mentor.updateOne(
+      {
+        _id: req.params.mentorId,
+        "review.user": { $eq: user._id }
+      },
+      {
+        $set: {
+          review: {
+            user: req.user.id,
+            userName: req.user.name,
+            stars: req.body.star
+          }
+        }
+      }
+    )
+    await Mentor.updateOne(
+      {
+        _id: req.params.mentorId,
+        "review.user": { $ne: user._id }
+      },
+      {
+        $push: {
+          review: {
+            user: req.user.id,
+            userName: req.user.name,
+            stars: req.body.star
+          }
+        }
+      }
+    )
+    // if (mentor.review.some(el => el.user.toString() === req.user.id.toString())) {
+    //   const removeStar = mentor.review.map(el => el.user.toString()).indexOf(req.user.id);
+    //   mentor.review.splice(removeStar, 1);
+    // }
+
+    await User.updateOne(
+      {
+        _id: req.user.id,
+        "giveStars.mentorId": { $eq: mentor._id },
+      },
+      {
+        $set: {
+          giveStars: { mentorId: mentor._id, stars: req.body.star }
+        },
+      }
+    );
+
+    await User.updateOne(
+      {
+        _id: req.user.id,
+        "giveStars.mentorId": { $ne: mentor._id },
+      },
+      {
+        $push: {
+          giveStars: { mentorId: mentor._id, stars: req.body.star }
+        },
+      }
+    );
+
+    // const newReview = {
+    //   user: req.user.id,
+    //   userName: req.user.name,
+    //   stars: req.body.star
+    // }
+    // mentor.review.unshift(newReview);
+    // const reviewMentor = await mentor.save();
+    res.json({ success: "true" });
+  } catch (error) {
+    res.status(400).json({ badRequest: "Something is wrong" });
+  }
+}

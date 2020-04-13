@@ -34,7 +34,7 @@ class App extends Component {
         <AuthStore>
           <Router>
             <div className="App">
-              <Navbar />
+              {/* <Navbar /> */}
 
               <Switch>
                 <Route exact path="/" component={Landing} />

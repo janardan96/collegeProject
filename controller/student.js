@@ -7,6 +7,13 @@ const studentProfileValidation = require("../validation/student/studentProfile")
 const studentInternshipValidation = require("../validation/student/internshipValidate");
 const studentEducationValidation = require("../validation/student/eductionValidation");
 
+// Recomendation
+const ContentBasedRecommender = require('content-based-recommender')
+const recommender = new ContentBasedRecommender({
+  minScore: 0.1,
+  maxSimilarDocuments: 100
+});
+
 exports.test = (req, res) => {
   res.json({ success: "Success" });
 };
@@ -16,7 +23,7 @@ exports.profile = async (req, res) => {
   try {
     const profile = await studentProfile
       .findOne({ user: req.user.id })
-      .populate("user", ["name", "email", "profilePic", "friendsList"]);
+      .populate("user", ["name", "email", "profilePic"]);
     if (!profile) {
       errrors.noProfile = "There is no profile for this user";
       return res.json(errrors);
@@ -247,3 +254,30 @@ exports.deleteProfile = async (req, res) => {
     res.status(400).json({ badRequest: "Something is wrong" });
   }
 };
+
+exports.getRecommendation = async (req, res) => {
+  try {
+    const profile = await studentProfile.findOne({ user: req.user.id });
+    const allMentor = await mentorProfile.find();
+    const studentSkills = profile.skills.join(" ");
+    const studentId = profile._id.toString();
+    const mentorSkills = allMentor.map(el => {
+      return {
+        id: el._id.toString(),
+        content: el.skills.join(" "),
+        type: "Mentor"
+      }
+    });
+
+    const allDataRecommendation = [...mentorSkills, { id: studentId, content: studentSkills, type: "Student" }]
+    // start training
+    recommender.train(allDataRecommendation);
+    //get top 10 similar items to document 1000002
+    const similarDocuments = recommender.getSimilarDocuments(studentId, 0, 2);
+    res.status(200).json(similarDocuments)
+
+  } catch (error) {
+    res.status(400).json({ error: error })
+
+  }
+}

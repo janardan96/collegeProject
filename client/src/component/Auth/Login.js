@@ -8,6 +8,8 @@ import axios from "axios";
 import jwt_decode from "jwt-decode";
 import * as Url from "../../Provider/api";
 import setAuthToken from "../../Provider/SetAuthToken";
+import Navbar from "../Layout/Navbar";
+
 
 class Login extends Component {
   _isMounted = false;
@@ -71,57 +73,58 @@ class Login extends Component {
     return this.context.isAuth ? (
       <Redirect to="/dashboard" />
     ) : (
-      <React.Fragment>
-        <div
-          className="login  mt-5 pt-4 d-flex flex-grow-1 "
-          style={{ height: "73vh" }}
-        >
-          <div className="container align-self-center">
-            <div className="row">
-              <div className="col-md-8 m-auto">
-                <h1 className="display-4 text-center">Log In</h1>
-                <p className="lead text-center">
-                  Sign in to your E-Mentor Connector account
+        <React.Fragment>
+          <Navbar />
+          <div
+            className="login  mt-5 pt-4 d-flex flex-grow-1 "
+            style={{ height: "73vh" }}
+          >
+            <div className="container align-self-center">
+              <div className="row">
+                <div className="col-md-8 m-auto">
+                  <h1 className="display-4 text-center">Log In</h1>
+                  <p className="lead text-center">
+                    Sign in to your E-Mentor Connector account
                 </p>
-                <form onSubmit={this.onSubmit}>
-                  <div className="form-group">
+                  <form onSubmit={this.onSubmit}>
+                    <div className="form-group">
+                      <input
+                        type="email"
+                        className={classnames("form-control form-control-lg", {
+                          "is-invalid": errors.email
+                        })}
+                        placeholder="Email Address"
+                        name="email"
+                        value={this.state.email}
+                        onChange={this.onChange}
+                      />
+                      {<div className="invalid-feedback">{errors.email}</div>}
+                    </div>
+                    <div className="form-group">
+                      <input
+                        type="password"
+                        className={classnames("form-control form-control-lg", {
+                          "is-invalid": errors.password
+                        })}
+                        placeholder="Password"
+                        name="password"
+                        value={this.state.password}
+                        onChange={this.onChange}
+                      />
+                      {<div className="invalid-feedback">{errors.password}</div>}
+                    </div>
                     <input
-                      type="email"
-                      className={classnames("form-control form-control-lg", {
-                        "is-invalid": errors.email
-                      })}
-                      placeholder="Email Address"
-                      name="email"
-                      value={this.state.email}
-                      onChange={this.onChange}
+                      type="submit"
+                      className="btn btn-info btn-block mt-4"
                     />
-                    {<div className="invalid-feedback">{errors.email}</div>}
-                  </div>
-                  <div className="form-group">
-                    <input
-                      type="password"
-                      className={classnames("form-control form-control-lg", {
-                        "is-invalid": errors.password
-                      })}
-                      placeholder="Password"
-                      name="password"
-                      value={this.state.password}
-                      onChange={this.onChange}
-                    />
-                    {<div className="invalid-feedback">{errors.password}</div>}
-                  </div>
-                  <input
-                    type="submit"
-                    className="btn btn-info btn-block mt-4"
-                  />
-                </form>
-                <Link to={ROUTES.Forgot}>Forgot password</Link>
+                  </form>
+                  <Link to={ROUTES.Forgot}>Forgot password</Link>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </React.Fragment>
-    );
+        </React.Fragment>
+      );
   }
 }
 

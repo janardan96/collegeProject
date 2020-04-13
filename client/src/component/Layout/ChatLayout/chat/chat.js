@@ -4,6 +4,7 @@ import Input from "../input/input"
 import "./chat.css"
 import Messages from "../messages/messages"
 import AuthContext from "../../../../Provider/AuthContext";
+import Navbar from "../../Navbar";
 
 
 
@@ -55,14 +56,17 @@ function Chat(props) {
 
 
     return (
-        <div className="outerContainer">
-            <div className="containerChat">
-                <InfoBar />
-                <Messages messages={messages} id={recieverId} msg={message} />
-                <Input message={message} setMessage={setMessage} sendMessage={sendMessage} language={language} updateLanguage={updateLanguage} />
+        <React.Fragment>
+            <Navbar />
+            <div className="outerContainer">
+                <div className="containerChat">
+                    <InfoBar />
+                    <Messages messages={messages} id={recieverId} msg={message} />
+                    <Input message={message} setMessage={setMessage} sendMessage={sendMessage} language={language} updateLanguage={updateLanguage} />
+                </div>
+                {/* <TextContainer users={users}/> */}
             </div>
-            {/* <TextContainer users={users}/> */}
-        </div>
+        </React.Fragment>
     )
 }
 

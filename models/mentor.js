@@ -62,6 +62,7 @@ const MentorSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "users"
       },
+      userName: { type: String },
       stars: {
         type: Number
       }

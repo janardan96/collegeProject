@@ -10,6 +10,7 @@ import ProfileAction from "./ProfileAction";
 import Experience from "./Experience";
 import Education from "./Education";
 import Skills from "./SkillSet";
+import Navbar from "../Navbar"
 
 class Dashboard extends Component {
     static contextType = AuthContext;
@@ -134,20 +135,23 @@ class Dashboard extends Component {
 
 
         return (
-            <div className="dashboard" style={{ marginTop: "56px" }}>
-                <div className="container">
-                    <div className="row">
-                        <div className="col-md-12">
-                            <div className="d-flex justify-content-between align-items-center">
-                                <h1 className="display-4  ">Dashboard</h1>
-                                {mentorLink}
-                            </div>
+            <React.Fragment>
+                <Navbar />
+                <div className="dashboard" style={{ marginTop: "56px" }}>
+                    <div className="container">
+                        <div className="row">
+                            <div className="col-md-12">
+                                <div className="d-flex justify-content-between align-items-center">
+                                    <h1 className="display-4  ">Dashboard</h1>
+                                    {mentorLink}
+                                </div>
 
-                            {dashboardContent}
+                                {dashboardContent}
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </React.Fragment>
         );
     }
 }

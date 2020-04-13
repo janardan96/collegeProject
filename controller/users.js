@@ -21,6 +21,15 @@ exports.test = (req, res) => {
   });
 };
 
+exports.getStar = async (req, res) => {
+  try {
+    const userReview = await User.findById(req.user.id);
+    res.status(200).json(userReview.giveStars)
+  } catch (error) {
+    res.status(400).json({ Error: "Something Wrrong" })
+  }
+}
+
 exports.register = async (req, res) => {
   try {
     const { errors, isValid } = validateRegisterInput(req.body);

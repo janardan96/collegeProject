@@ -49,4 +49,13 @@ router.delete(
   Mentor.deleteProfile
 );
 
+// Star to mentor
+router.post(
+  "/star/:mentorId",
+  passport.authenticate("jwt", {
+    session: false
+  }),
+  Mentor.giveStar
+);
+
 module.exports = router;

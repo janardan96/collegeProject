@@ -1,9 +1,43 @@
 import React, { Component } from 'react';
 import _ from "lodash";
+import StarRatings from 'react-star-ratings';
+import * as URL from "../../../Provider/api";
+import axios from "axios";
+
 
 class ProfileHeader extends Component {
+
+    state = {
+        rating: 0,
+        userReview: []
+    };
+
+
+    async componentDidMount() {
+        const user = await axios.get(`${URL.getStar}`);
+        user.data.forEach(el => {
+            if (this.props.mentorId === el.mentorId) {
+                return this.setState({
+                    rating: el.stars
+                })
+            }
+        })
+
+
+    }
+
     render() {
-        const { profile } = this.props;
+        const { profile, auth } = this.props;
+        console.log("Staersa", this.state)
+        console.log("Props", this.props)
+
+        const changeRating = async (newRating) => {
+            const res = await axios.post(`${URL.giveStar}/${this.props.mentorId}`, { star: newRating })
+            this.setState({
+                rating: newRating
+            });
+            console.log("New Rating", res);
+        }
 
         return (
             <React.Fragment>
@@ -44,6 +78,18 @@ class ProfileHeader extends Component {
                                     </a>)}
 
                                 </p>
+                                {auth ? <StarRatings
+                                    rating={this.state.rating}
+                                    starRatedColor="orange"
+                                    changeRating={changeRating}
+                                    starHoverColor="orange"
+                                    numberOfStars={5}
+                                    starDimension="28px"
+                                    starSpacing="3px"
+                                    name='rating'
+                                // onStarClick={this.onStarClick.bind(this)}
+                                /> : ""}
+
                             </div>
                         </div>
                     </div>
