@@ -27,4 +27,5 @@ export const acceptRequest = "/api/friendReq/acceptRequest"
 export const cancelRequest = "/api/friendReq/cancelRequest";
 
 // Language Translate
-export const languageTranslate = "/translate"
+export const languageTranslate = "/translate";
+export const recommendation = "/api/student/recommendation";

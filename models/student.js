@@ -33,6 +33,7 @@ const StudentSchema = new Schema({
     type: [String],
     required: true
   },
+  recomendation: [],
   sentRequest: [
     {
       mentorId: { type: Schema.Types.ObjectId, ref: "mentor" },

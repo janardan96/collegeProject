@@ -89,8 +89,12 @@ class ProfileHeader extends Component {
                                     name='rating'
                                 // onStarClick={this.onStarClick.bind(this)}
                                 /> : ""}
-
                             </div>
+                            <div className="d-flex justify-content-center mt-2">
+                                {auth ? <button className="btn btn-light  ml-3"
+                                    onClick={() => this.props.sendRequest(profile._id)}>Sent Request</button> : ""}
+                            </div>
+
                         </div>
                     </div>
                 </div>

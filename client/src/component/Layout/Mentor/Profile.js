@@ -31,16 +31,24 @@ const Profile = (props) => {
             console.log("Props menot", props)
             if (props.match.params.userId) {
                 const profilesArray = await axios.get(`${URL.mentorProfile}/${props.match.params.userId}`);
-                console.log("Profile", profilesArray)
                 setState({ loading: false, profile: profilesArray.data });
             }
         }
-
         getMentorData(props)
-
     }, [])
 
-
+    const sendRequest = async (id) => {
+        try {
+            const sendRequestId = {
+                id: id,
+                studentId: this.state.studentId
+            };
+            const sendingRequest = await axios.post(URL.sendFriendRequest, sendRequestId);
+            console.log("Request is sneded", sendingRequest)
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     const { profile, loading } = state;
     let profileContent;

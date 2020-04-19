@@ -58,10 +58,62 @@ const LogOutDiv = (props) => (
     </li>
     <li>
       <div className="dropdown">
-        <a href="#" className="dropdown-toggle" data-toggle="dropdown" id="dropdownMenu2" style={{
+        <a href="#" className="dropdown ml-2 mr-2" data-toggle="dropdown" id="dropdownMenu1" style={{
           fontSize: "20px", color: "white"
         }}>
-          <span className="glyphicon fa fa-bell nav-glyphicon"></span><b className="caret"></b>
+          <span className="glyphicon fa fa-bell nav-glyphicon"></span>
+          <b className="caret"></b>
+          {props.totalRequest.length > 0 ? <span className="label label-primary nav-label-icon" style={{
+            fontSize: "12px",
+            color: "white",
+            background: "#e86464"
+          }}>{props.totalRequest.length}</span> : <span className="label label-primary nav-label-icon" style={{
+            display: "none"
+          }}></span>}
+
+        </a>
+
+        <ul className="dropdown-menu" aria-labelledby="dropdownMenu1" style={{
+          width: "300px",
+          left: "-195px",
+          height: "300px"
+        }}>
+          <div className="row mb-2">
+            <div className="dropdown-tag d-block">
+              <h3 className="text-center dropdown-tag-head" >
+                Notification
+							</h3>
+            </div>
+          </div>
+          {props.recommendation.length > 0 ? props.recommendation.map((value, i) => <li key={i}>
+            <Link to={`/profile/${value.id}`} style={{ color: "#636060" }}>
+              <div className="d-flex ml-2 mr-2 align-items-center">
+                <div >
+                  <img src={value.pic} className="rounded-circle" style={{ width: "40px" }}
+                  />
+                </div>
+                <div >
+                  <p id={value.id} style={{
+                    margin: "0px",
+                    fontSize: "14px",
+                    marginLeft: "8px"
+                  }}>You have a new Mentor Suggestion : <strong>{value.name}</strong> </p>
+                </div>
+              </div>
+              <hr />
+            </Link>
+          </li>) : <p className="text-center">No Suggestion</p>}
+
+        </ul>
+      </div>
+    </li>
+
+    <li>
+      <div className="dropdown">
+        <a href="#" className="dropdown ml-2 mr-2" data-toggle="dropdown" id="dropdownMenu2" style={{
+          fontSize: "20px", color: "white"
+        }}>
+          <span className="glyphicon fas fa-user nav-glyphicon"></span><b className="caret"></b>
           {props.totalRequest.length > 0 ? <span className="label label-primary nav-label-icon" style={{
             fontSize: "12px",
             color: "white",
@@ -147,6 +199,7 @@ const Navbar = (props) => {
   const authContext = useContext(AuthContext);
   const [user, setUser] = useState({})
   const [totalRequest, setRequest] = useState([]);
+  const [recommendation, setRecommendation] = useState([]);
   const [newRquest, setNewRequest] = useState([]);
   const [studentId, setId] = useState("");
   const [mentorId, setMentorId] = useState("");
@@ -163,19 +216,27 @@ const Navbar = (props) => {
         }
         setUser(authContext.user)
         const getProfile = await axios.get(URL.getProfile, { headers: { Authorization: `${localStorage.getItem("token")}` } });
-        setId(getProfile.data._id)
+        setId(getProfile.data._id);
+
+        // Recommendation
+        const recommendationData = await axios.get(URL.recommendation, { headers: { Authorization: `${localStorage.getItem("token")}` } });
+
+        const allMentorRecomendation = recommendationData.data.recomendation.map(async (el) => {
+          const data = await axios.get(`${URL.mentorProfile}/${el.id}`);
+          return { id: data.data._id, name: data.data.user.name, pic: data.data.user.profilePic }
+        }
+        )
+        Promise.all(allMentorRecomendation).then(el => setRecommendation(el)
+        )
       }
       dealMentor()
     }
-
-  }, [authContext, totalRequest]);
+  }, []);
 
 
   useEffect(() => {
     if (authContext.isAuth) {
-
       authContext.socket.emit('login', { userId: authContext.user.id, name: authContext.user.name });
-
     }
 
   }, [authContext.isAuth, newRquest])
@@ -209,7 +270,7 @@ const Navbar = (props) => {
             {!authContext.isAuth ? (
               <LogInSignUp />
             ) : (
-                <LogOutDiv logout={authContext.logout} user={authContext.user} totalRequest={totalRequest} studentId={studentId} mentorId={mentorId} />
+                <LogOutDiv logout={authContext.logout} user={authContext.user} totalRequest={totalRequest} studentId={studentId} mentorId={mentorId} recommendation={recommendation} />
               )}
           </div>
         </div>

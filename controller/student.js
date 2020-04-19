@@ -273,8 +273,16 @@ exports.getRecommendation = async (req, res) => {
     // start training
     recommender.train(allDataRecommendation);
     //get top 10 similar items to document 1000002
+
     const similarDocuments = recommender.getSimilarDocuments(studentId, 0, 2);
-    res.status(200).json(similarDocuments)
+    profile.recomendation.unshift(...similarDocuments);
+    profile.recomendation = profile.recomendation.filter((thing, index, self) =>
+      index === self.findIndex((t) => (
+        t.id === thing.id
+      ))
+    )
+    const userRecomendation = await profile.save();
+    res.status(200).json(userRecomendation)
 
   } catch (error) {
     res.status(400).json({ error: error })
